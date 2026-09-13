@@ -82,6 +82,12 @@ PLAYER_TEMPLATE = r"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"
   button.play { width:34px; height:34px; flex:0 0 34px; border-radius:50%;
                 border:1px solid #d0d7de; background:#fff; cursor:pointer;
                 font-size:12px; line-height:1; color:#1f2328; }
+  .mrow { display:flex; align-items:center; gap:8px; padding:2px 4px 8px;
+          border-bottom:1px solid #eceff3; }
+  .mrow label { font-size:11px; color:#6b7280; white-space:nowrap; }
+  .mrow input[type=range] { width:90px; }
+  .mrow .val { font-family:'SF Mono',Menlo,monospace; font-size:11px; color:#1f2328;
+               min-width:34px; text-align:right; }
   button.play:hover { border-color:#2f81f7; color:#2f81f7; }
   .row.playing button.play { background:#2f81f7; border-color:#2f81f7; color:#fff; }
   .mid { flex:1; min-width:0; }
@@ -91,9 +97,32 @@ PLAYER_TEMPLATE = r"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"
   .time { flex:0 0 auto; font-family:'SF Mono',Menlo,monospace; font-size:11px;
           color:#6b7280; min-width:64px; text-align:right; }
 </style></head><body>
+<div class="mrow"><label>主音量（护耳上限 85%）</label>
+  <input type="range" id="master" min="0" max="100" value="70">
+  <span class="val" id="masterVal">70%</span></div>
 <div id="list"></div>
 <script>
 const ITEMS = __PAYLOAD__;
+const MASTER_MAX = 0.85, FADE_S = 0.06;
+let ac = null, limiter = null, masterGain = null, masterVal = 0.7;
+function ensureCtx() {
+  if (ac) return;
+  ac = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = ac.createGain(); masterGain.gain.value = masterVal * MASTER_MAX;
+  limiter = ac.createDynamicsCompressor();
+  limiter.threshold.value = -3; limiter.knee.value = 0; limiter.ratio.value = 20;
+  limiter.attack.value = 0.003; limiter.release.value = 0.25;
+  masterGain.connect(limiter); limiter.connect(ac.destination);
+}
+function setMaster(v) {
+  masterVal = v;
+  const el = document.getElementById('masterVal'); if (el) el.textContent = Math.round(v*100)+'%';
+  if (ac && masterGain) { const t = ac.currentTime; masterGain.gain.cancelScheduledValues(t);
+    masterGain.gain.setTargetAtTime(masterVal * MASTER_MAX, t, 0.02); }
+}
+const masterEl = document.getElementById('master');
+if (masterEl) masterEl.oninput = () => { ensureCtx();
+  if (ac.state === 'suspended') ac.resume(); setMaster(+masterEl.value / 100); };
 const el = (t, c) => { const x = document.createElement(t); if (c) x.className = c; return x; };
 function fmt(s) { s = Math.max(0, s || 0); const m = Math.floor(s / 60), r = Math.floor(s % 60);
                   return m + ':' + String(r).padStart(2, '0'); }
@@ -115,8 +144,19 @@ ITEMS.forEach((it, idx) => {
   row.appendChild(btn); row.appendChild(mid); row.appendChild(tm);
   list.appendChild(row);
 
-  const url = URL.createObjectURL(new Blob([b64buf(it.b64)], { type: 'audio/mpeg' }));
-  const au = new Audio(url); au.preload = 'metadata';
+  const au = new Audio();
+  let node = null, gnode = null;
+  function attach() {
+    ensureCtx();
+    if (au.__attached) return;
+    const url = URL.createObjectURL(new Blob([b64buf(it.b64)], { type: 'audio/mpeg' }));
+    au.src = url;
+    node = ac.createMediaElementSource(au);
+    gnode = ac.createGain(); gnode.gain.value = 1;
+    node.connect(gnode); gnode.connect(masterGain);
+    au.__attached = true;
+  }
+  au.preload = 'metadata';
   function tick() {
     if (au.paused) return;
     const dur = au.duration || it.dur || 0;
@@ -132,11 +172,23 @@ ITEMS.forEach((it, idx) => {
       const prow = document.getElementById('row' + current);
       if (prow) prow.classList.remove('playing');
     }
-    current = idx; row.classList.add('playing'); au.currentTime = 0; au.play(); tick();
+    attach();
+    const go = (ac.state === 'suspended') ? ac.resume() : Promise.resolve();
+    go.then(() => {
+      const t = ac.currentTime;
+      gnode.gain.cancelScheduledValues(t); gnode.gain.setValueAtTime(0.0001, t);
+      gnode.gain.linearRampToValueAtTime(1.0, t + FADE_S);
+      current = idx; row.classList.add('playing'); au.currentTime = 0; au.play(); tick();
+    });
   };
   au.onended = () => { btn.textContent = '▶'; row.classList.remove('playing'); current = -1;
                        tm.textContent = '0:00 / ' + fmt(au.duration || it.dur); fill.style.width = '0%'; };
-  au.onpause = () => { btn.textContent = '▶'; };
+  au.onpause = () => {
+    btn.textContent = '▶';
+    if (ac && gnode) { const t = ac.currentTime;
+      gnode.gain.cancelScheduledValues(t); gnode.gain.setValueAtTime(Math.max(0.0001, gnode.gain.value), t);
+      gnode.gain.linearRampToValueAtTime(0.0001, t + FADE_S); }
+  };
   au.onplay = () => { btn.textContent = '⏸'; };
   window['au' + idx] = au;
 });
@@ -180,6 +232,11 @@ AB_TEMPLATE = r"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
   <select id="selB"></select>
   <button class="big" id="play">▶ 同步播放</button>
   <button class="big alt" id="reset">⟲ 归零</button>
+  <span class="mrow" style="border:none;padding:0">
+    <label>主音量（护耳上限 85%）</label>
+    <input type="range" id="master" min="0" max="100" value="70">
+    <span class="val" id="masterVal">70%</span>
+  </span>
 </div>
 <div class="lanes">
   <div class="lane"><div class="cap"><b id="capA">A</b><span id="tmA">0:00</span></div>
@@ -196,7 +253,22 @@ function b64buf(b64) { const bin = atob(b64), n = bin.length, u = new Uint8Array
 function fmt(s) { s = Math.max(0, s || 0); const m = Math.floor(s / 60), r = Math.floor(s % 60);
   return m + ':' + String(r).padStart(2, '0'); }
 const urlOf = i => URL.createObjectURL(new Blob([b64buf(ITEMS[i].b64)], { type: 'audio/mpeg' }));
+const MASTER_MAX = 0.85, FADE_S = 0.06;
+const ac = new (window.AudioContext || window.webkitAudioContext)();
+const limiter = ac.createDynamicsCompressor();
+limiter.threshold.value = -3; limiter.knee.value = 0; limiter.ratio.value = 20;
+limiter.attack.value = 0.003; limiter.release.value = 0.25;
+const masterGain = ac.createGain(); masterGain.gain.value = 0.7 * MASTER_MAX;
+masterGain.connect(limiter); limiter.connect(ac.destination);
+let masterVal = 0.7;
+function setMaster(v) { masterVal = v; const el = $('masterVal');
+  if (el) el.textContent = Math.round(v * 100) + '%';
+  const t = ac.currentTime; masterGain.gain.cancelScheduledValues(t);
+  masterGain.gain.setTargetAtTime(masterVal * MASTER_MAX, t, 0.02); }
 const auA = new Audio(), auB = new Audio();
+const srcA = ac.createMediaElementSource(auA), srcB = ac.createMediaElementSource(auB);
+const gA = ac.createGain(), gB = ac.createGain(); gA.gain.value = gB.gain.value = 1;
+srcA.connect(gA); gA.connect(masterGain); srcB.connect(gB); gB.connect(masterGain);
 auA.src = urlOf(0); auB.src = urlOf(1); auA.preload = auB.preload = 'metadata';
 
 ITEMS.forEach((it, i) => {
@@ -232,11 +304,26 @@ $('play').onclick = () => {
   if (!auA.paused || !auB.paused) { auA.pause(); auB.pause(); $('play').textContent = '▶ 同步播放'; return; }
   const L = Math.min(auA.duration || 0, auB.duration || 0) || (ITEMS[0].dur || 0);
   if (Math.abs(auA.currentTime - auB.currentTime) > 0.25) { auA.currentTime = 0; auB.currentTime = 0; }
-  auA.play(); auB.play(); $('play').textContent = '⏸ 暂停';
-  tick();
+  const go = (ac.state === 'suspended') ? ac.resume() : Promise.resolve();
+  go.then(() => {
+    const t = ac.currentTime;
+    for (const g of [gA, gB]) { g.gain.cancelScheduledValues(t);
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(1.0, t + FADE_S); }
+    auA.play(); auB.play(); $('play').textContent = '⏸ 暂停';
+    tick();
+  });
 };
-$('reset').onclick = () => { auA.pause(); auB.pause(); auA.currentTime = 0; auB.currentTime = 0;
-  $('play').textContent = '▶ 同步播放'; tick(); };
+const me = $('master');
+if (me) me.oninput = () => { if (ac.state === 'suspended') ac.resume(); setMaster(+me.value / 100); };
+$('reset').onclick = () => {
+  if (ac) { const t = ac.currentTime;
+    for (const g of [gA, gB]) { g.gain.cancelScheduledValues(t);
+      g.gain.setValueAtTime(Math.max(0.0001, g.gain.value), t);
+      g.gain.linearRampToValueAtTime(0.0001, t + FADE_S); } }
+  setTimeout(() => { auA.pause(); auB.pause(); auA.currentTime = 0; auB.currentTime = 0;
+    gA.gain.value = gB.gain.value = 1;
+    $('play').textContent = '▶ 同步播放'; tick(); }, FADE_S * 1000 + 30);
+};
 function tick() {
   const L = Math.min(auA.duration || 0, auB.duration || 0) || (ITEMS[0].dur || 0);
   const t = Math.max(auA.currentTime || 0, auB.currentTime || 0);

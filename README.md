@@ -40,3 +40,12 @@ Assembled from the `ai-live-avatar` experiment artifacts (`data/mp3`, `data/list
 `data/test_output`, `data/mp3/rvc_matrix_wav`). The RVC matrix numbers come from
 `data/mp3/rvc_matrix_results.json`; peaks were computed from the lossless sources at build
 time. Internal listening only — no listening-result claim.
+
+## Listening safety (ear protection)
+
+* **Master volume** slider per player with a hard ceiling: the top of the slider is `-1.4 dBFS`.
+* **Soft limiter** on the master bus (threshold `-3 dBFS`, ratio 20) — the singing takes and the
+  TTS rows cannot spike.
+* **Fade in / fade out** on every play, pause and reset (no clicks); switching rows stops the
+  previous take with a fade.
+* LAN use: the app binds `0.0.0.0`; open `http://<mac-lan-ip>:8532` from a phone on the same Wi-Fi.
