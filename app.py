@@ -355,7 +355,8 @@ st.caption(
 )
 
 groups = load_manifest()
-tab_sing, tab_speech = st.tabs(["🎤 唱歌（RVC 歌声转换）", "🗣️ 说话（Qwen3-TTS 克隆）"])
+tab_sing, tab_speech, tab_avatar = st.tabs(
+    ["🎤 唱歌（RVC 歌声转换）", "🗣️ 说话（Qwen3-TTS 克隆）", "🪞 皮套（Live2D）"])
 
 with tab_sing:
     st.subheader("参数矩阵 A–F · 同一段人声、不同 RVC 参数")
@@ -415,6 +416,19 @@ with tab_speech:
         h = 24 + 46 * len(items)
         html, _ = player_html(items, key, height=h)
         components.html(html, height=h)
+
+with tab_avatar:
+    st.subheader("皮套试听 · nana 模型")
+    st.caption(
+        "左边选任意试听片段，皮套跟着音频实时对口型（RMS 包络驱动）；底部按钮给情绪表情。"
+        "模型与音频同源服务（Mac 8899），本页嵌入其画面。"
+    )
+    import os as _os
+    _l2d_url = _os.environ.get("L2D_URL", "http://localhost:8899/listen_live2d.html")
+    components.iframe(_l2d_url, height=760, scrolling=False)
+    st.caption(
+        f"皮套页独立地址：`{_l2d_url}`（手机同 Wi-Fi 用 `http://192.168.2.33:8899/listen_live2d.html` 打开）"
+    )
 
 st.caption(
     "音频由既有产物整理（统一 22.05 kHz 单声道 96 kbps；矩阵与成品用无损源重编码）；"
