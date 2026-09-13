@@ -1,0 +1,326 @@
+{
+ "groups": {
+  "sing_matrix": [
+   {
+    "id": "matrix_A",
+    "file": "matrix_A.mp3",
+    "desc": "A · rmvpe · index 0 · protect 0.33",
+    "dur": 123.6
+   },
+   {
+    "id": "matrix_B",
+    "file": "matrix_B.mp3",
+    "desc": "B · rmvpe · index 0.3 · protect 0.33",
+    "dur": 123.6
+   },
+   {
+    "id": "matrix_C",
+    "file": "matrix_C.mp3",
+    "desc": "C · rmvpe · index 0.5 · protect 0.33",
+    "dur": 123.6
+   },
+   {
+    "id": "matrix_D",
+    "file": "matrix_D.mp3",
+    "desc": "D · rmvpe · index 0 · protect 0.5",
+    "dur": 123.6
+   },
+   {
+    "id": "matrix_E",
+    "file": "matrix_E.mp3",
+    "desc": "E · pm · index 0 · protect 0.33",
+    "dur": 123.6
+   },
+   {
+    "id": "matrix_F",
+    "file": "matrix_F.mp3",
+    "desc": "F · rmvpe · index 0.3 · protect 0.5",
+    "dur": 123.6
+   }
+  ],
+  "sing_final": [
+   {
+    "id": "final_song1",
+    "file": "final_song1.mp3",
+    "desc": "第一首完整歌（yachiyo 音色）",
+    "dur": 206.0
+   },
+   {
+    "id": "final_song2_perfect",
+    "file": "final_song2_perfect.mp3",
+    "desc": "perfect 成品（带伴奏，282s）",
+    "dur": 281.9
+   },
+   {
+    "id": "final_song3",
+    "file": "final_song3.mp3",
+    "desc": "song3 成品 · 告白气球（212s）",
+    "dur": 212.4
+   },
+   {
+    "id": "final_song3_src",
+    "file": "final_song3_src.mp3",
+    "desc": "song3 原曲（bilibili 告白气球，对照）",
+    "dur": 212.4
+   },
+   {
+    "id": "final_cover_seg_orig",
+    "file": "final_cover_seg_orig.mp3",
+    "desc": "cover 段 · 原唱对照（40s）",
+    "dur": 40.0
+   },
+   {
+    "id": "final_cover_seg_conv",
+    "file": "final_cover_seg_conv.mp3",
+    "desc": "cover 段 · yachiyo 转换（40s）",
+    "dur": 40.0
+   }
+  ],
+  "speech_ref": [
+   {
+    "id": "speech_ref1",
+    "file": "speech_ref1.mp3",
+    "desc": "参考音色 ref1（克隆链的输入）",
+    "dur": 4.6
+   },
+   {
+    "id": "speech_ref2",
+    "file": "speech_ref2.mp3",
+    "desc": "参考音色 ref2",
+    "dur": 3.8
+   },
+   {
+    "id": "speech_gold1",
+    "file": "speech_gold1.mp3",
+    "desc": "黄金参考 1 · 口语语调",
+    "dur": 40.9
+   },
+   {
+    "id": "speech_gold2",
+    "file": "speech_gold2.mp3",
+    "desc": "黄金参考 2 · 口语语调",
+    "dur": 40.9
+   }
+  ],
+  "speech_clone": [
+   {
+    "id": "speech_clone_ref1_full",
+    "file": "speech_clone_ref1_full.mp3",
+    "desc": "克隆结果 ref1 · 非流式",
+    "dur": 25.6
+   },
+   {
+    "id": "speech_clone_ref1_stream",
+    "file": "speech_clone_ref1_stream.mp3",
+    "desc": "克隆结果 ref1 · 流式",
+    "dur": 25.6
+   },
+   {
+    "id": "speech_clone_ref2_full",
+    "file": "speech_clone_ref2_full.mp3",
+    "desc": "克隆结果 ref2 · 非流式",
+    "dur": 25.6
+   },
+   {
+    "id": "speech_clone_icl",
+    "file": "speech_clone_icl.mp3",
+    "desc": "Qwen3-TTS ICL 对照",
+    "dur": 7.5
+   },
+   {
+    "id": "speech_vllm_short",
+    "file": "speech_vllm_short.mp3",
+    "desc": "vLLM 克隆（短句）",
+    "dur": 7.0
+   },
+   {
+    "id": "speech_vllm_long41",
+    "file": "speech_vllm_long41.mp3",
+    "desc": "vLLM 长文本 41s",
+    "dur": 41.4
+   },
+   {
+    "id": "speech_base_long218",
+    "file": "speech_base_long218.mp3",
+    "desc": "base · 长参考 21.8s",
+    "dur": 42.3
+   },
+   {
+    "id": "speech_tunnel",
+    "file": "speech_tunnel.mp3",
+    "desc": "服务端 · 隧道调用",
+    "dur": 28.9
+   }
+  ],
+  "speech_ft": [
+   {
+    "id": "speech_ft11_long82",
+    "file": "speech_ft11_long82.mp3",
+    "desc": "v1 微调 · 长文本 82s",
+    "dur": 81.9
+   },
+   {
+    "id": "speech_ft12_short",
+    "file": "speech_ft12_short.mp3",
+    "desc": "v1 微调 · 短句对照",
+    "dur": 40.9
+   },
+   {
+    "id": "speech_v2_13_long82",
+    "file": "speech_v2_13_long82.mp3",
+    "desc": "v2 微调 · 长文本 82s",
+    "dur": 81.9
+   },
+   {
+    "id": "speech_v2_14_short",
+    "file": "speech_v2_14_short.mp3",
+    "desc": "v2 微调 · 短句 4.6s",
+    "dur": 4.6
+   },
+   {
+    "id": "speech_v3_19",
+    "file": "speech_v3_19.mp3",
+    "desc": "v3 归一化微调",
+    "dur": 40.9
+   },
+   {
+    "id": "speech_v4_28",
+    "file": "speech_v4_28.mp3",
+    "desc": "v4 微调 · 去毒药",
+    "dur": 10.6
+   }
+  ],
+  "speech_tone": [
+   {
+    "id": "speech_tone_15_after",
+    "file": "speech_tone_15_after.mp3",
+    "desc": "15 音色 · 语调增强后",
+    "dur": 42.3
+   },
+   {
+    "id": "speech_tone_16_hi",
+    "file": "speech_tone_16_hi.mp3",
+    "desc": "base · 高采样语调",
+    "dur": 10.0
+   },
+   {
+    "id": "speech_tone_17_instruct",
+    "file": "speech_tone_17_instruct.mp3",
+    "desc": "CustomVoice · instruct 语调",
+    "dur": 12.8
+   },
+   {
+    "id": "speech_tone_18_ref2",
+    "file": "speech_tone_18_ref2.mp3",
+    "desc": "base · ref2 语调起伏",
+    "dur": 11.3
+   },
+   {
+    "id": "speech_tone_20_combo",
+    "file": "speech_tone_20_combo.mp3",
+    "desc": "base · ref246 语调组合",
+    "dur": 10.1
+   },
+   {
+    "id": "speech_tone_27_spoken",
+    "file": "speech_tone_27_spoken.mp3",
+    "desc": "15 音色 · 口语文本",
+    "dur": 40.9
+   },
+   {
+    "id": "speech_tone_mix13",
+    "file": "speech_tone_mix13.mp3",
+    "desc": "15 音色 · 语调增强 mix13",
+    "dur": 42.3
+   },
+   {
+    "id": "speech_tone_mix15",
+    "file": "speech_tone_mix15.mp3",
+    "desc": "15 音色 · 语调增强 mix15",
+    "dur": 42.3
+   }
+  ],
+  "speech_misc": [
+   {
+    "id": "speech_cand_159",
+    "file": "speech_cand_159.mp3",
+    "desc": "候选 159 段",
+    "dur": 11.8
+   },
+   {
+    "id": "speech_cand_186",
+    "file": "speech_cand_186.mp3",
+    "desc": "候选 186 段",
+    "dur": 40.9
+   },
+   {
+    "id": "speech_ref1_single",
+    "file": "speech_ref1_single.mp3",
+    "desc": "ref1 单段 · 长文本",
+    "dur": 40.9
+   },
+   {
+    "id": "speech_ref1_138",
+    "file": "speech_ref1_138.mp3",
+    "desc": "ref1+138 组合",
+    "dur": 40.9
+   }
+  ],
+  "speech_multi": [
+   {
+    "id": "speech_zh_base",
+    "file": "speech_zh_base.mp3",
+    "desc": "中文 · base 模型",
+    "dur": 3.8
+   },
+   {
+    "id": "speech_zh_17b",
+    "file": "speech_zh_17b.mp3",
+    "desc": "中文 · 1.7B",
+    "dur": 5.8
+   },
+   {
+    "id": "speech_zh_speak",
+    "file": "speech_zh_speak.mp3",
+    "desc": "中文 · 说话",
+    "dur": 5.7
+   },
+   {
+    "id": "speech_ja_base",
+    "file": "speech_ja_base.mp3",
+    "desc": "日语 · base 模型",
+    "dur": 4.5
+   },
+   {
+    "id": "speech_ja_17b",
+    "file": "speech_ja_17b.mp3",
+    "desc": "日语 · 1.7B",
+    "dur": 6.9
+   },
+   {
+    "id": "speech_ja_speak",
+    "file": "speech_ja_speak.mp3",
+    "desc": "日语 · 说话",
+    "dur": 6.9
+   },
+   {
+    "id": "speech_en_base",
+    "file": "speech_en_base.mp3",
+    "desc": "英语 · base 模型",
+    "dur": 4.2
+   },
+   {
+    "id": "speech_en_17b",
+    "file": "speech_en_17b.mp3",
+    "desc": "英语 · 1.7B",
+    "dur": 5.7
+   },
+   {
+    "id": "speech_en_speak",
+    "file": "speech_en_speak.mp3",
+    "desc": "英语 · 说话",
+    "dur": 3.8
+   }
+  ]
+ }
+}
