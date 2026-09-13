@@ -144,7 +144,7 @@ ITEMS.forEach((it, idx) => {
 """
 
 
-def ab_player_html(matrix_items, page_id, peaks, height=430):
+def ab_player_html(matrix_items, page_id, peaks, height=310):
     """A/B comparison player: pick any two matrix variants, snap-start both, shared playhead."""
     payload = [{"id": it["id"], "desc": it["desc"], "dur": it["dur"],
                 "peaks": peaks.get(it["id"], []),
