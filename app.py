@@ -24,7 +24,7 @@ st.set_page_config(page_title="AI 主播试听台 · yachiyo", page_icon="🎤",
 
 @st.cache_data(show_spinner=False)
 def load_manifest():
-    with open(os.path.join(DATA, "manifest.json")) as fh:
+    with open(os.path.join(DATA, "manifest.json"), encoding="utf-8") as fh:
         return json.load(fh)["groups"]
 
 
@@ -33,13 +33,13 @@ def load_matrix_metrics():
     path = os.path.join(DATA, "rvc_matrix_results.json")
     if not os.path.exists(path):
         return None
-    return json.load(open(path))
+    return json.load(open(path, encoding="utf-8"))
 
 
 @st.cache_data(show_spinner=False)
 def load_peaks():
     path = os.path.join(DATA, "peaks.json")
-    return json.load(open(path)) if os.path.exists(path) else {}
+    return json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {}
 
 
 @st.cache_data(show_spinner=False)
